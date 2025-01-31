@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Admin Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f4f8;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #004d99;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .metrics {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .metric {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: calc(33.33% - 20px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric h2 {
+            font-size: 24px;
+            color: #004d99;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .metric p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .metric .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .metric i {
+            font-size: 24px;
+            color: #004d99;
+            margin-right: 10px;
+        }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .metric {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metric {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Telegram Admin Dashboard</h1>
+        </div>
+        <div class="metrics">
+            <!-- Total Members -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-users"></i>
+                    <h2>Total Members</h2>
+                </div>
+                <p class="value">{{ data.total_members }}</p>
+            </div>
+
+            <!-- New Members Joined -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>New Members Joined</h2>
+                </div>
+                <p class="value">{{ data.new_members }}</p>
+            </div>
+
+            <!-- Members Left -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-times"></i>
+                    <h2>Members Left</h2>
+                </div>
+                <p class="value">{{ data.members_left }}</p>
+            </div>
+
+            <!-- Messages Sent -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-comment-dots"></i>
+                    <h2>Messages Sent</h2>
+                </div>
+                <p class="value">{{ data.messages_sent }}</p>
+            </div>
+
+            <!-- Most Active Users -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-users-cog"></i>
+                    <h2>Most Active Users</h2>
+                </div>
+                <p class="value">{{ data.most_active_users | join(', ') }}</p>
+            </div>
+
+            <!-- Least Active Users -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-slash"></i>
+                    <h2>Least Active Users</h2>
+                </div>
+                <p class="value">{{ data.least_active_users | join(', ') }}</p>
+            </div>
+
+            <!-- Media Shared -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-camera-retro"></i>
+                    <h2>Media Shared</h2>
+                </div>
+                <p class="value">Photos: {{ data.media_shared.photos }}, Videos: {{ data.media_shared.videos }}, Documents: {{ data.media_shared.documents }}</p>
+            </div>
+
+            <!-- Most Shared Links -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-link"></i>
+                    <h2>Most Shared Links</h2>
+                </div>
+                <p class="value">{{ data.most_shared_links | join(', ') }}</p>
+            </div>
+
+            <!-- Top Hashtags -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-hashtag"></i>
+                    <h2>Top Hashtags</h2>
+                </div>
+                <p class="value">{{ data.top_hashtags | join(', ') }}</p>
+            </div>
+
+            <!-- Admin Actions -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Admin Actions</h2>
+                </div>
+                <p class="value">Bans: {{ data.admin_actions.bans }}, Mutes: {{ data.admin_actions.mutes }}, Deletions: {{ data.admin_actions.deletions }}</p>
+            </div>
+
+            <!-- Peak Activity Times -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Peak Activity Times</h2>
+                </div>
+                <p class="value">{{ data.peak_activity_times | join(', ') }}</p>
+            </div>
+
+            <!-- Banned Users Count -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-ban"></i>
+                    <h2>Banned Users Count</h2>
+                </div>
+                <p class="value">{{ data.banned_users_count }}</p>
+            </div>
+
+            <!-- Reported Messages -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h2>Reported Messages</h2>
+                </div>
+                <p class="value">{{ data.reported_messages }}</p>
+            </div>
+
+            <!-- Bot Commands Usage -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-robot"></i>
+                    <h2>Bot Commands Usage</h2>
+                </div>
+                <p class="value">{{ data.bot_commands_usage | join(', ') }}</p>
+            </div>
+
+            <!-- Polls Created -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-poll"></i>
+                    <h2>Polls Created</h2>
+                </div>
+                <p class="value">{{ data.polls_created }}</p>
+            </div>
+
+            <!-- Polls Participation -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-poll"></i>
+                    <h2>Polls Participation</h2>
+                </div>
+                <p class="value">{{ data.polls_participation }}</p>
+            </div>
+
+            <!-- Stickers and Emojis Usage -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-smile"></i>
+                    <h2>Stickers & Emojis Usage</h2>
+                </div>
+                <p class="value">{{ data.stickers_emojis_usage }}</p>
+            </div>
+
+            <!-- Group Description Changes -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-file-alt"></i>
+                    <h2>Group Description Changes</h2>
+                </div>
+                <p class="value">{{ data.group_description_changes }}</p>
+            </div>
+
+            <!-- Group Photo Changes -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-camera"></i>
+                    <h2>Group Photo Changes</h2>
+                </div>
+                <p class="value">{{ data.group_photo_changes }}</p>
+            </div>
+
+            <!-- Pinned Messages Count -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-thumbtack"></i>
+                    <h2>Pinned Messages Count</h2>
+                </div>
+                <p class="value">{{ data.pinned_messages_count }}</p>
+            </div>
+
+            <!-- Join Requests -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>Join Requests</h2>
+                </div>
+                <p class="value">{{ data.join_requests }}</p>
+            </div>
+
+            <!-- Member Invitations -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-friends"></i>
+                    <h2>Member Invitations</h2>
+                </div>
+                <p class="value">{{ data.member_invitations }}</p>
+            </div>
+
+            <!-- Group Title Changes -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-heading"></i>
+                    <h2>Group Title Changes</h2>
+                </div>
+                <p class="value">{{ data.group_title_changes }}</p>
+            </div>
+
+            <!-- User Inactivity Alerts -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-bell"></i>
+                    <h2>User Inactivity Alerts</h2>
+                </div>
+                <p class="value">{{ data.user_inactivity_alerts | join(', ') }}</p>
+            </div>
+
+            <!-- Most Mentioned Users -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-user-tag"></i>
+                    <h2>Most Mentioned Users</h2>
+                </div>
+                <p class="value">{{ data.most_mentioned_users | join(', ') }}</p>
+            </div>
+
+            <!-- Message Deletion Rate -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-trash-alt"></i>
+                    <h2>Message Deletion Rate</h2>
+                </div>
+                <p class="value">{{ data.message_deletion_rate }}%</p>
+            </div>
+
+            <!-- Admin Response Rate -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-clock"></i>
+                    <h2>Admin Response Rate</h2>
+                </div>
+                <p class="value">{{ data.admin_response_rate }}%</p>
+            </div>
+
+            <!-- Group Growth Rate -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Group Growth Rate</h2>
+                </div>
+                <p class="value">{{ data.group_growth_rate }}%</p>
+            </div>
+
+            <!-- User Engagement Rate -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-chart-pie"></i>
+                    <h2>User Engagement Rate</h2>
+                </div>
+                <p class="value">{{ data.user_engagement_rate }}%</p>
+            </div>
+
+            <!-- User Retention Rate -->
+            <div class="metric">
+                <div class="icon-container">
+                    <i class="fas fa-arrow-up"></i>
+                    <h2>User Retention Rate</h2>
+                </div>
+                <p class="value">{{ data.user_retention_rate }}%</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
