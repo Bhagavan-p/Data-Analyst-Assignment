@@ -33,9 +33,9 @@ This project aims to develop an Admin Dashboard for managing Telegram Groups usi
 
 1. Clone the Repository
 
-git clone <repository-url>
+git clone repository-url
 
-cd <repository-folder>
+cd repository-folder
 
 2. Install Dependencies
 
